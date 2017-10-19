@@ -2,7 +2,7 @@
 
 ### Accessing I/O Devices
 
-Computer systems components communicate through an interconnection network. From a programmers point of view, locations implemented as **I/O registers** withinthe same address space.
+Computer systems components communicate through an interconnection network. From a programmers point of view, locations implemented as **I/O registers** within the same address space.
 
 ### Memory-mapped I/O
 
