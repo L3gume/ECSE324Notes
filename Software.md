@@ -28,6 +28,8 @@ The assembler accepts assembly source listings, stored in an input text file, as
 * usually in a sequential block of memory
 * where do empty lines in the layout come from
 
+![](./Images/Assembler.png)
+
 #### OP Code Size
 
 OP codes don't all occupy the same amount of memory
@@ -55,6 +57,8 @@ Today, assemblers are programs that we execute on computers.
 In the past, humans had to *manually* assemble their own code.
 
 * working through this process can be helpful
+
+![](./Images/PaperASM.png)
 
 People had to:
 
@@ -85,12 +89,13 @@ An important question arises during assembly, when substituting values from the 
 ```
 
 * What's the problem here?
+    * We don't know what .loop2 is when we first encounter it.
 
 Two-pass assemblers solve this problem by:
 
 1. making an initial pass: convert mnemonics and building the symbol table **when you can**
     * in this case, we have no clue what the .loop2 thing is
-2. make a final pass filling in missing references
+2. make a final pass filling in missing references, this time, .loop2 is in the symbol table so we know what it is.
 
 ### Loading & Executing Object Programs
 
@@ -326,6 +331,8 @@ The compiler/assembler and debugger allow source and instruction-level **breakpo
 * control flow is once again passed to the debugger
 
 Advanced dev tools will allow for complex conditional breakpoints to be defined in code.
+
+![](./Images/CondBreakpoint.png)
 
 ### State-of-the-art Debuggers
 
