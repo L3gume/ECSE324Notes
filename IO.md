@@ -15,7 +15,7 @@ Locations associated with I/O devices are accessed with load and store instructi
 * Includes **data**, **status** and **control** registers accessible with load and store instructions.
 * Memory-mapped I/O enables software to view these registers as locations in memory.
 
-*Fancy diagram in the slides*
+![](./Images/Interface.png)
 
 ### I/O Synchronization
 
@@ -42,9 +42,13 @@ The `ready` signal in each case is a **status flag** in **status register** that
 
 Assume a divce with 8-bit I/O registers. For example, keyboard has `KIN` status flag in bit `b1` of KBD_STATUS register as address `0x4004`. The processor polls `KBD_STATUS` register, checking whether `KIN` flag is set to 0 or 1. If `KIN` is 1, processor reads `KBD_DATA` register.
 
+![](./Images/Reading.png)
+
 ### Polled I/O: writing
 
 For example, display has `DOUT` status flag in bit `b2` of DISP_STATUS register at address `0x4014`. the processor polls `DISP_STATUS` reg, chacking whether `DOUT` flag is 0 or 1. If `DOUT` is 1, processor writes `DISP_DATA` reg. You have to poll a device's status reg for each time you read or write it's data register.
+
+![](./Images/Writing.png)
 
 ### Wait Loop for Polling I/O Status
 
@@ -109,7 +113,7 @@ ECHO:   LDRB    R4, [R2, #4]    // load DISP_STATUS byte and
 * Polling would spend each 10s interval waiting for the signal, without doing computations.
 * The timer can raise an interrupt-request signal to the processor every 10s.
 
-*Fancy diagram in slides*
+![](./Images/Interrupts.png)
 
 ### Interrupt-Service Routine
 
