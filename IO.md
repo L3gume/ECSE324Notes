@@ -234,3 +234,209 @@ Some modes have an extra set of shadow registers that are used instead of the us
 Recall that in PC-relative addressing we had to consider that the PC is incremented by 8 because the processor prefetches the next instruction.
 
 To return from the interrupt, fetch instruction i+1 by decrementing the address stored in the LR by 4.
+
+## Bus Protocols
+
+### Interconnection Networks
+
+An *interconnection network* is used to transfer data among the processor, memory, and I/O devices. A commonly-used interconnection network is called a **bus**
+
+### A Single-Bus System
+
+* A bus is a set of shared wires
+* Only one pair src/dest units can use the bus to transfer data at any one time
+* Hardware manages access to the bus to enforce this constraint
+
+### Tri-State buffers
+
+* When the control signal "enable" is low the buffer is completely disconnected from the ouput f  *images needed*
+    * When e is high, the buffer drives x onto y
+    * The disconnected state "Z" is "high impedance"
+
+### I/O interface for an input device
+
+* Each I/O device is assigned a unique set of addresses for the registers in its interface
+
+*image*
+
+### Bus Protocols
+
+* Set of rules that govern when a device may place info on the bus, when it may load data on the bus into one of its registers, etc...
+* Control signals indicate what and when actions are to be taken
+* `R/W` control line specifies whether a read or write is to be done (read when 1, write when 0)
+    * Data size parameter (byte, halfword, word) can be indicated by other control lines.
+* One of the two devices controls the transfer initiating the read or write commands (master) and the other is *slave*. usually, but not always, the processor is the master.
+* Other control liens convey timing info. Two approaches to timing of bus transfers:
+    * **Synchronous:** all devices derive timing info from a *bus clock*
+    * **Asynchronous**
+
+### Input (read) transfer timing on a synchronous bus
+
+*image*
+
+* Write is similar: master puts data on data lines at t0. An t2 the addressed device loads data into its data register
+* Signals propagate to different devices at different times depending on their location on the bus
+* Assume that the bus clock is seen at all devices at the same time.
+
+#### A detailed timing diagram for the input transfer
+
+*other image*
+
+* Not all devices operate at the same speed
+* t2 - t0 must be chosen to accomodate the longest delays on the bus and the slowest device interface
+* All device must operate at the speed of the slowest device (synchronous SUCKS)
+* Master assumes that the data is made available, or has been received at t2, but what happens if malfunction?
+
+### Multiple-Cycle data transfers
+
+* To address both of these issues, most bus protocols include a device *response* signal
+    * A device response signal indicates that the address was successfully decoded and that it is ready to participate in a data transfer operation
+* Can also be used to adjust the delay of a transfer op
+    * Usually this is accomplished by allowing a data transfer to span multiple cycles
+
+#### An input transfer using multiple clock cycles
+
+*image*
+
+### Asynchronous Protocol
+
+* Timing automatically adjusts to delays - no bus clock
+* Handshake protocol (exchange of command and response signal between master and slave) - each signal change results in a response: *full handshake* or *fully-interlocked*
+* Data transfer is controlled by two interlocked signals: `Master-ready` and `Slave-ready`
+* Whenever the processor takes an action, it waits for the device interface to respond before taking the next action, and vice-versa
+
+#### Handshake control: input operation
+
+*image*
+
+*image*
+
+### Synchronous vs. Asynchronous
+
+* Async adjusts to the timing of each device automatically
+* Sync requires careful timing design
+* Async transfer requires four end-to-end delays (2 round trips)
+* Sync transfer only requires one round trip
+* Sync is used in modern high-speed busses
+
+### Arbitration: granting access to a shared resource
+
+Say several devices with to be bus master
+
+* Multiple processors (cores) on the same bus
+* processor wishes to write to bus, and an I/O device wishes to write directly to mem
+    * *Direct memory access* (DMA)
+
+### Bus arbitration
+
+*image*
+
+* Devices request bus mastership
+* An arbiter grants the bus to the highest priority device
+* Control lines on the bus are used to request and grant the bus
+
+*image for granting the bus*
+
+## Parallel and Serial Interfaces
+
+### I/O Ports
+
+* An I/O ports connects a device to the bus
+* Parallel ports transfer several bits of data at once
+* Serial ports transfer one bit at a time
+    * Comm with the processor is still parallel - conversation from parallel to serial happens inside the interface circuit
+
+#### Input Port: Kbd to CPU
+
+*image x3*
+
+**Detail of status flag control:**
+
+* KIN is set by Valid and cleared by a read operation, but only when Master-ready is not asserted
+
+*image*
+
+#### An output interface
+
+*image x3*
+
+### Serial Links
+
+* Many I/O interconns use serial data transmission
+    * More suitable for longer distances
+    * Less expensive
+* Data are transmitted one bit at a time
+* Requires a means for the receiver to recover timing info
+* A simple scheme for low-speed transmission is known as "start-stop", using Universal Asynchronous Receiver Transmitter (UART)
+
+#### UART
+
+*image*
+
+#### Start-stop Transmission
+
+* Receiver and transmitter maintain their own unsynchronized clocks (fr ~ 16 ft)
+* Sample at middle of bit: modulo-16 counter reset at leading edge of start bit. At count of 8, check if the signal is still 0, and then reset counter. Sample next 8 bits at count of 16.
+
+*image*
+
+### Synchronous serial transmission
+
+* Async works by detecting the 1-0 transmission at the beginning of the start bit
+* Very high speed transmission - the waveform is not square and async is hard to get working
+* A sync transmitter inserts code (bit sequences) at the beginning of the transmission
+* Receiver uses the knowledge of the code to generate a receiver clock that is sync'd to the transmitter clock
+
+### I/O interconnection standards
+
+* Standards facilitate system integration using from a variety of sources and encourage the dev of many plug-compatible devices.
+* Perhaps the most commonly encouraged I/O standard today is the Universal Serial Bus (USB)
+    * mem keys, printers, external disk drives, cameras, etc.
+
+#### USB features
+
+* speed
+    * USB1: 12 Mb/s
+    * USB2: 480 Mb/s
+    * UBS3: 5 Gb/s
+* Point-to-point connections using serial transmission and two twisted pairs (+5V, Ground, two data wires)
+* Low-speed transmission is single-ended: one data wire for 0, other for 1
+* High-speed transmission uses *differential signaling*
+    * data encoded as the voltage diff between the two data wires
+    * noise is cancelled as it is common to both wires
+* Can connect many devices using simple point-to-point links and hubs
+* plug-and-play
+* Works by polling devices to resolve simultaneous messages
+
+### PCI (peripheral component interconnect) bus
+
+*image*
+
+* Processor-independent motherboard bus
+* Devices on the PCI bus appear in the address space of the processor
+
+#### Reading 4 bytes from device on PCI bus
+
+*image*
+
+#### Plug-and-play
+
+* PCI pironeered the plug and play feature, which made possible by the bus's intial connection protocol
+* up to 21 device connectors on the PCI bus
+* Each PCI-compatible device has a small ROM with info on device characteristics
+* Processor scans all connectors to determine whether a device is plugged in
+* Assigns an address to each device and reads the contents of its ROM
+* With this information, it selects the appropriate device driver software, performs any initialization that may be needed, etc.
+
+#### PCIexpress
+
+* Point-to-point connections with one or more switches forming a tree
+* Root complex provides high-speed prots for memory and other devices
+
+#### PCIe Links
+
+* Basic connection is called a lane
+* A lane consists of two twisted-pairs or optical lines for eacn direction of transmission
+* Data rate is 2.5 Gb/s in each direction
+* A connection to a device (link) may use up to 16 lanes
+* PCIe is compatible with PCI
