@@ -2,8 +2,6 @@
 
 ## Memory Technology
 
-*image*
-
 ### RAM
 
 * Memory access time
@@ -25,9 +23,9 @@ For example, consider 16x8 RAM with a 8-bit wordsize and 16 words
 * how many bits are needed for the memory address
     * that many (?)
 
-*image*
+![](./Images/Memory/ram1.png)
 
-*image*
+![](./Images/Memory/ram2.png)
 
 #### SRAM
 
@@ -36,7 +34,13 @@ For example, consider 16x8 RAM with a 8-bit wordsize and 16 words
 * SRAMs are limited to how large they can be - typically at most few Mbs
 * Used in cache memory, but not the main
 
-*images*
+![](./Images/Memory/sram1.png)
+
+![](./Images/Memory/sram2.png)
+
+![](./Images/Memory/sram3.png)
+
+![](./Images/Memory/sram4.png)
 
 #### DRAM
 
@@ -45,7 +49,7 @@ For example, consider 16x8 RAM with a 8-bit wordsize and 16 words
 * Can implement DRAMs with large capacity (~Gb)
 * Used for main memory
 
-*image*
+![](./Images/Memory/dram.png)
 
 #### Reading DRAM
 
@@ -62,7 +66,7 @@ To refresh the entire DRAM each row must be peridically read - done by an extern
 * Assume that each row needs to be refreshed every 64 ms, the minimum time between two row accesses is 50 ns and that all rows are refreshed in 8192 cycles
 * Read/write operations have to be delayed until refresh is finished. What is the refresh overhead?
 
-*image*
+![](./Images/Memory/refreshOverhead.png)
 
 #### Fast Page Mode
 
@@ -74,7 +78,7 @@ To refresh the entire DRAM each row must be peridically read - done by an extern
 
 #### Synchronous DRAMs
 
-*image*
+![](./Images/Memory/syncDram.png)
 
 * Modern sync DRAM ( **SDRAM** ) uses clock to generate internal timing signals (CAS and RAS)
 * Memory controller is integrated on-chip
@@ -86,13 +90,21 @@ To refresh the entire DRAM each row must be peridically read - done by an extern
 * SDRAM circuitry increments column counter and transfers consecutive data automatically
 * Burst length determines number of transfers
 
+![](./Images/Memory/blockTransfer.png)
+
+### Mem Latency and Bandwidth
+
+* Memory *latency* (ns) is the time for the first word of a block tranfer to appear on the data lines
+* The time between subsequent words is much shorter than the time needed to transfer the first word
+* The mem *bandwidth* is a useful performance measure for a SDRAM
+
 #### Double-Data-Rate (DDR) SDRAM
 
 * Modern SDRAMs use both rising and falling edges od the clock ("double data rate")
 
 e.g. DDR4 has a clock of 2133 MHz and can support up to 2400 MTransfers / second
 
-*image*
+![](./Images/Memory/ddrRam.pgn)
 
 ## Non-volatile memories
 
@@ -105,7 +117,7 @@ e.g. DDR4 has a clock of 2133 MHz and can support up to 2400 MTransfers / second
 
 contents only written *once*, at the time of manufacture
 
-*image*
+![](./Images/Memory/rom.png)
 
 #### PROM, EPROM, EEPROM
 
@@ -131,11 +143,11 @@ contents only written *once*, at the time of manufacture
     * *A direct memory access (DMA)* controller manages the transfer of larger blocks of data between memory & I/O devices
     * CPU intiates transfer, which is managed by the DMU unit without further CPU involvement
 
-*image*
+![](./Images/Memory/dma.png)
 
 ### DMA Controller
 
-*image*
+![](./Images/Memory/dmacontroller.png)
 
 * shared, or in each I/O device
 * Keeps track of progress with address counter
@@ -158,14 +170,12 @@ Solution:
 
 ### Unlimited amounts of fast mem?
 
-*image*
-
 * Keep a **copy** of frequently used data in the small cache mem so that if it is needed again it is quickly accessible without going to the large main mem
 * Specialized hardware manages the data between main mem and cache
 * Transparent
 * Having knowledge of how cache works helps write faster programs
 
-*image*
+![](./Images/Memory/speedmem.png)
 
 ### So why does this work?
 
@@ -213,13 +223,11 @@ Multiple blocks may contend for same location
 * New block always overwrites previous block
 * if have multiple frequently accessed blocks that kick eachother out of the cache, you will have many cache misses and suffer the penalty of having to go to main memory frequently
 
-*image*
+![](./Images/Memory/directmapping1.png)
 
 * Each cache block has some space to store the "tag" of the memory block that is currently stored in that block
 * On an access, the tag of the requested address is compared with the stored tag.
 * if they match -> cache hit!
-
-*image*
 
 ### Associative Mapping
 
@@ -250,3 +258,135 @@ Multiple blocks may contend for same location
     * requires specialized hardware to track accesses to cache blocks in the set
 * Another replacement policy is to remove the "oldest" block in the set
 * Random replacement works surprisingly well
+
+### Cache Example
+
+A 4x10 array of 16-bit numbers is stored in an array *A* in column order. Normalize the elements of the first row of A with respect to the average value of the elements in the row.
+
+![](./Images/Memory/cacheexample.png)
+
+* Mem word size: 16 bits
+* Word-addressable with 16-bit addresses
+* Block size = one 16-bit word
+* Cache size *n* = 8 blocks
+* LRU replacement
+* Consider direct mapped, associative and 4-way set-associative caches
+
+#### Direct-Mapped
+
+![](./Images/Memory/directmapexample.png)
+
+#### Associative
+
+![](./Images/Memory/associativemapexample.png)
+
+#### Set-Associative
+
+![](./Images/Memory/setassociativemap.png)
+
+## Storage Storage Technology
+
+### Secondary Storage
+
+* Non-volatile long term storage
+* Bottom of memory hierarchy -> slow but large capacity
+* Managed by the OS
+* Flash mem (SSD) is the technology used in phones, tablets, and most computers now
+* Magnetic disks (hard drives) have lower cost/bit
+
+### Magnetic Hard Disks
+
+* One or more platters on a common spindle
+* Platters are covered with thin magnetic film
+* Platters rotate on spindle at constant rate
+* Read/Write heads in close proximity to surface can access data arranged in concentric tracks
+* Magnetic yokes and magnetizing coil can change or sense polarity of areas on surface
+
+![](./Images/Memory/hdd1.png)
+
+* A *cylinder* is a logical set of tracks on a stack of disks that can be accessed without moving the read/write heads
+* Formatting information includes track/sector markers and *error-correcting code* (ECC) information
+* *Filesystem:* data structures that the OS uses to keep track of files organized on the disk
+
+![](./Images/Memory/hdd2.png)
+
+### Access Time
+
+**Seek time**:
+
+time required to move the read/write head to the proper track, depends on the initial position of the head.
+
+* Average values are 5 to 8 ms
+
+**Latency**:
+
+(rotational delay) time to read addressed sector after the head is positioned over the correct track
+
+* Average time for a 1/2 rotation
+
+*Flash access time is typically 35 to 100 microseconds (100x faster)*
+
+## Virtual Memory
+
+* Physical mem. capacity smaller than address space size
+* A large program or many active processes may not be entirely resident in the main mem
+* Use secondary storage to hold portions exceeding memory capacity - makes RAM appear to be very large
+* Virtual mem is the lowest tier of mem hierarchy
+    * Mag disk (5ms) is 5 orders of magnitude slower than SDRAM (15ns)
+    * It is important to manage virtual mem carefully to reduce nb of disk accesses - managed in software (OS)
+* Programs written assuming full address space
+* CPU issues *virtual addess (logical address)*
+* Does normal operations when addressed contents are in mem
+* When no current phys address exists, perform actions to place contents in mem
+* Fully associative (reduce miss rate)
+
+### Memory Management Unit
+
+* Impl of virtual memory relies on a *memory management unit* (MMU)
+* Maintains virtual -> phys addess mapping to perform translations
+* If no phys address exists, MMU invokes OS services
+* Causes transfer os desired contents from disk to the main mem using DMA scheme
+* MMU mapping info also updated
+
+![](./Images/Memory/mmu.png)
+
+### Address Translation
+
+* Use fixed-length unit of pages (2K-16K bytes)
+* Larger size than cache blocks
+    * Disks have high access times, but bandwidth of several MB/s (even GB/s nowadays)
+* For translation, divide address bits into 2 fields
+    * lower bits give *offset* of word within page
+    * upper bits give *virtual page number* (VPN)
+* Translation preserves offset bits, but causes VPN bits to be replaced with *page frame* bits
+* *Page Table*, stored in main mem, provides info to translate
+
+### Page Table
+
+* MMU must know location of page table
+* *Page table register* as starting address
+* Adding VPN to base reg contents gives location of corresponding entry about page
+* If page is in memory, table gives frame bits
+    * If not, table may indicate disk location
+* Control bits for each entry include: valid bit and modified bit indicating needed write-back
+* Also bits for read/write permission
+
+![](./Images/Memory/pagetable.png)
+
+### Tanslation Lookaside Buffer
+
+* MMU must perform lookup in page table for translation of every virtual address
+* For large physical memory, MMU cannot hold entire page table with all its info
+* *Translation Lookaside Buffer* in the MMU holds recently-accessed entries of page table
+* Associative searches are performed on the TLB with virtual addresses to find matching entries
+* If miss in TLB, access full table and update TLB
+
+![](./Images/Memory/tlb.png)
+
+### Page Faults
+
+* A *page fault* occurs when a virtual address has no corresponding physical address
+* MMU raises an interrupt for OS to place the containing page into mem
+* OS selects location using LRU, doing write-back if needed
+* Delay may be long, involving disk accesses, hence another program is selected to execute
+* suspended program restarts later when ready
