@@ -257,7 +257,7 @@ An *interconnection network* is used to transfer data among the processor, memor
 
 * Each I/O device is assigned a unique set of addresses for the registers in its interface
 
-*image*
+![](./Images/ioInterface.png)
 
 ### Bus Protocols
 
@@ -272,7 +272,7 @@ An *interconnection network* is used to transfer data among the processor, memor
 
 ### Input (read) transfer timing on a synchronous bus
 
-*image*
+![](./Images/inTimingSync.png)
 
 * Write is similar: master puts data on data lines at t0. An t2 the addressed device loads data into its data register
 * Signals propagate to different devices at different times depending on their location on the bus
@@ -280,7 +280,7 @@ An *interconnection network* is used to transfer data among the processor, memor
 
 #### A detailed timing diagram for the input transfer
 
-*other image*
+![](./Images/detailedInTiming.png)
 
 * Not all devices operate at the same speed
 * t2 - t0 must be chosen to accomodate the longest delays on the bus and the slowest device interface
@@ -296,7 +296,7 @@ An *interconnection network* is used to transfer data among the processor, memor
 
 #### An input transfer using multiple clock cycles
 
-*image*
+![](./Images/multiClockCycleTransfer.png)
 
 ### Asynchronous Protocol
 
@@ -307,9 +307,11 @@ An *interconnection network* is used to transfer data among the processor, memor
 
 #### Handshake control: input operation
 
-*image*
+![](./Images/handshake1.png)
 
-*image*
+#### ouput
+
+![](./Images/handshake2.png)
 
 ### Synchronous vs. Asynchronous
 
@@ -329,13 +331,13 @@ Say several devices with to be bus master
 
 ### Bus arbitration
 
-*image*
+![](./Images/busArbitration.png)
 
 * Devices request bus mastership
 * An arbiter grants the bus to the highest priority device
 * Control lines on the bus are used to request and grant the bus
 
-*image for granting the bus*
+![](./Images/grantingBus.png)
 
 ## Parallel and Serial Interfaces
 
@@ -348,17 +350,23 @@ Say several devices with to be bus master
 
 #### Input Port: Kbd to CPU
 
-*image x3*
+![](./Images/kbd1.png)
+
+![](./Images/kbd2.png)
+
+![](./Images/kbd3.png)
 
 **Detail of status flag control:**
 
 * KIN is set by Valid and cleared by a read operation, but only when Master-ready is not asserted
 
-*image*
+![](./Images/statusFlagControl.png)
 
 #### An output interface
 
-*image x3*
+![](./Images/output1.png)
+
+![](./Images/output2.png)
 
 ### Serial Links
 
@@ -371,14 +379,14 @@ Say several devices with to be bus master
 
 #### UART
 
-*image*
+![](./Images/uart.png)
 
 #### Start-stop Transmission
 
 * Receiver and transmitter maintain their own unsynchronized clocks (fr ~ 16 ft)
 * Sample at middle of bit: modulo-16 counter reset at leading edge of start bit. At count of 8, check if the signal is still 0, and then reset counter. Sample next 8 bits at count of 16.
 
-*image*
+![](./Images/startStop.png)
 
 ### Synchronous serial transmission
 
@@ -410,14 +418,14 @@ Say several devices with to be bus master
 
 ### PCI (peripheral component interconnect) bus
 
-*image*
+![](./Images/pci.png)
 
 * Processor-independent motherboard bus
 * Devices on the PCI bus appear in the address space of the processor
 
 #### Reading 4 bytes from device on PCI bus
 
-*image*
+![](./Images/readPci.png)
 
 #### Plug-and-play
 
