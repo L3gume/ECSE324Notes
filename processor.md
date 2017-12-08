@@ -17,11 +17,11 @@ A processor is responsible for reading program instructions from the computer's 
 
 ## Datapath Design
 
-*image*
+![](./Images/Processor/Selection_013.png)
 
 * Combinational circuits can be divided into simple subcircuits that are cascaded into a multi-stage structure
 
-*image*
+![](./Images/Processor/Selection_014.png)
 
 ### Instruction Execution
 
@@ -46,7 +46,7 @@ How can we decode the instruction and read the registers at the same time?
 
 * In a RISC ISA, register fileds are always in the same positions in the instruction. If the registers weren't need, they'd be ignored.
 
-*image*
+![](./Images/Processor/Selection_015.png)
 
 #### Arithmetic and Logical Instructions
 
@@ -116,25 +116,25 @@ The immediate operand is given in the instruction word and can be found in the I
 
 ### Register File
 
-*image*
+![](./Images/Processor/Selection_016.png)
 
 * A **2-port register file** is needed to read the two source registers at the same time
 * It may be implemented using a 2-port memory
 
 **Alternative implementation of 2-port register file:**
 
-*image*
+![](./Images/Processor/Selection_017.png)
 
 * Using two single-ported memory blocks each containing a copy of the register file
 
 ### ALU (Arithmetic Logic Unit)
 
-*image*
+![](./Images/Processor/Selection_018.png)
 
 * Both source operands and the destination location are in the register file
 * Conceptual single-cycle view of an ALU with two source operands in registers
 
-*image*
+![](./Images/Processor/Selection_019.png)
 
 * One of the source operands is the immediate value in `IR`
 
@@ -160,7 +160,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 ### The datapath - Stages 2 to 5
 
-*image*
+![](./Images/Processor/Selection_020.png)
 
 * Register file, used in stages 2 and 5
 * Multicycle: Inter-stage registers `RA, RB, RZ, RY` needed to carry data from one stage to next
@@ -170,7 +170,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 #### Register File
 
-*image*
+![](./Images/Processor/Selection_021.png)
 
 * Address inputs are connected to the corresponding fields in `IR`
 * Source registers are read in stage 2; their contents are stored in `RA` and `RB`
@@ -178,7 +178,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 #### ALU stage
 
-*image*
+![](./Images/Processor/Selection_022.png)
 
 * ALU performs calculation specified by the instruction
 * Multiplexer `MuxB` selects either `RB` or the immediate field of `IR`
@@ -187,7 +187,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 #### Memory stage
 
-*image*
+![](./Images/Processor/Selection_023.png)
 
 * For a memory instruction, `RZ` provides mem address, and `MuxY` selects read data to be placed in `RY`
 * `RM` provides data for write operation
@@ -196,7 +196,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 #### Memory address generation
 
-*image*
+![](./Images/Processor/Selection_024.png)
 
 * `MuxMA` selects the `PC` when fetching instructions
 * The Instruction address generator increments the `PC` after fetching an instr
@@ -205,7 +205,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 #### Processor Control Section
 
-*image*
+![](./Images/Processor/Selection_025.png)
 
 * When instr is read, placed in `IR`
 * Control circuitry decodes the instr
@@ -214,7 +214,7 @@ Result of the instruction is stored in destination register in stage 5.
 
 #### Instruction Address Generator
 
-*image*
+![](./Images/Processor/Selection_026.png)
 
 Connections to registers `RY` and `RA` are used to support subroutine call and return instructions
 
@@ -222,7 +222,7 @@ Connections to registers `RY` and `RA` are used to support subroutine call and r
 
 **ADD R3, R4, R5**
 
-*image*
+![](./Images/Processor/Selection_027.png)
 
 ```asm
 1.  Memory addess <- [PC],
@@ -289,17 +289,17 @@ Connections to registers `RY` and `RA` are used to support subroutine call and r
 
 ### ARM Datapath
 
-*image*
+![](./Images/Processor/Selection_028.png)
 
 ## Control Design
 
 **Example RISC Instruction Format:**
 
-*image*
+![](./Images/Processor/Selection_029.png)
 
 ### Control Signal
 
-*image*
+![](./Images/Processor/Selection_030.png)
 
 * Select multiplexer inputs to guide the flow of data
 * Set the function performed by the ALU
@@ -308,11 +308,11 @@ Connections to registers `RY` and `RA` are used to support subroutine call and r
 
 ### Memory and IR control signals
 
-*image*
+![](./Images/Processor/Selection_031.png)
 
 ### Control signals of instruction address generator
 
-*image*
+![](./Images/Processor/Selection_032.png)
 
 ### Control Signal Generation
 
@@ -331,7 +331,7 @@ The inputs to the FSM are the IR, ALU result and external inputs such as interru
 
 #### Hardwired Generation of Control Signals
 
-*image*
+![](./Images/Processor/Selection_033.png)
 
 **Example:**
 
@@ -340,21 +340,21 @@ The inputs to the FSM are the IR, ALU result and external inputs such as interru
 * Make sure the `PC` is incremented only once when an execution step is extended for more than on clock cycle
 * `PC` should only be enabled when `MFC` is asserted, also in step 3 of branch instructions
 
-*image*
+![](./Images/Processor/Selection_034.png)
 
 * CISC-style processors have more complex instructions
 * Addressing modes that allow operands to be in memory, variable length instructions
 
 ### Bus
 
-*image*
+![](./Images/Processor/Selection_035.png)
 
 * An example of an interconnection network
 * When functional units are connected to a common bus, tri-state drivers are needed
 
 ### A 3-Bus CISC Organization
 
-*image*
+![](./Images/Processor/Selection_036.png)
 
 **Example: AND X(R7), R9**
 
@@ -391,7 +391,7 @@ The inputs to the FSM are the IR, ALU result and external inputs such as interru
 * From decoding of an instruction in `IR`, the control curcuitry executes the corresponding sequence of microinstructions
 * (mu)PC maintains the location of the current microinstruction
 
-*image*
+![](./Images/Processor/Selection_037.png)
 
 Microprogramming provides needed flexibility to implement more complex instructions in CISC processors.
 
@@ -406,7 +406,7 @@ However, reading and executing microinstructions incurs undersirably long delays
 * Divide the instructions into distinct steps
 * Overlap the execution of the five steps by allowing the hardware for each step to work on the next instruction in the program after it is done working on the current instr
 
-*image*
+![](./Images/Processor/Selection_038.png)
 
 ### Pipeline Organization
 
@@ -417,7 +417,7 @@ However, reading and executing microinstructions incurs undersirably long delays
 * These buffers incorporate `RA, RB, RM, RY, RZ, IR` and `PC-Temp` registers
 * Also holds control signal settings
 
-*image*
+![](./Images/Processor/Selection_039.png)
 
 ### Data Dependencies
 
@@ -430,7 +430,7 @@ SUB     R9, R2, R8
 * **data dependency** between the two instr because of `R2` carrying data from add to sub
 * On non-pipelined datapath, result is available in R2 because Add completes before sub
 
-*image*
+![](./Images/Processor/Selection_040.png)
 
 * The pipeline doesn't allow the simultaneous execution of these particular instr because of the dependency
 * This is called a **data hazard**
@@ -441,16 +441,14 @@ SUB     R9, R2, R8
 * So **stall** SUB for 3 cycles in decode stage
 * new val of `R2` is then available in cycle 6
 
-*image*
+![](./Images/Processor/Selection_041.png)
 
 * Control circuitry must recognize dependency while SUB is being decoded in cycle 3
 * Interstage buffers carry register identifiers for source(s) and destination of instructions
 * @ cycle 3, compare destination identifier in Compute stage against source(s) is decode
 * `R2` matches, so SUB kept in decode while add allowed to continue
 
-*image*
-
-*image*
+![](./Images/Processor/Selection_042.png)
 
 * Stall the SUB instr for 3 cycles by hoding interstage buffer `B1` contents steady
 * What happens after ADD leaves compute?
@@ -464,19 +462,17 @@ SUB     R9, R2, R8
 * For the preceding sequence of instructions, new value for `R2` is available at end of cycle 3
 * *Forward* value to where it is needed in cycle 4
 
-*image*
+![](./Images/Processor/Selection_043.png)
 
 ### Forwarding hardware
 
-*image*
+![](./Images/Processor/Selection_044.png)
 
-*image*
-
-*image*
+![](./Images/Processor/Selection_045.png)
 
 ### Software Handling of Dependencies
 
-*image*
+![](./Images/Processor/Selection_046.png)
 
 * Data deps are evident at compile time
 * Compilers puts 3 *explicit* NOP instrs between instrs having a dependency
@@ -485,13 +481,13 @@ SUB     R9, R2, R8
 
 ### Memory Delays
 
-*image*
+![](./Images/Processor/Selection_047.png)
 
 * Even with a cache *hit*, a load instr may cause a short delay due a data dep
 * one-cycle stall required for correct value to be forwared to instr needing that value
 * Optimize with useful instr to fill delay
 
-*image*
+![](./Images/Processor/Selection_048.png)
 
 ### Branch Delays
 
@@ -501,14 +497,14 @@ SUB     R9, R2, R8
 
 ### Unconditional Branches
 
-*image*
+![](./Images/Processor/Selection_049.png)
 
 ### Reducing the Branch Penalty
 
 * Must compute the target address earlier in the pipeline
 * Introduce a second adder dedicated to computing the branch target in the decode stage
 
-*image*
+![](./Images/Processor/Selection_050.png)
 
 ### Conditional Branches
 
@@ -522,4 +518,4 @@ SUB     R9, R2, R8
     * Alter the pipeline operation so that the instruction immediately following a branch is **always** fetched and executed, regardless of branch decision
 * If no suitable instr can be found to fill the slot (because of deps) the compiler must put a NOP in the slot
 
-*image*
+![](./Images/Processor/Selection_051.png)
