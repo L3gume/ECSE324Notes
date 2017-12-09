@@ -276,13 +276,28 @@ A 4x10 array of 16-bit numbers is stored in an array *A* in column order. Normal
 
 ![](./Images/Memory/directmapexample.png)
 
+*To note*:
+
+* Here, the 3 least significant bits determine the mapping of the blocks into the cache.
+    * See the image above, A(0,0) has 000 as last 3 bits and A(0,1) has 100, hence why it is stored in block 4
+    * If we were to store A(1,0), it would be in block 1 because its last 3 bits are 001
+* The f mod n works here simply by knowing that 3 bits go from 0 to 7, meaning we can easily use those for mapping.
+
 #### Associative
 
 ![](./Images/Memory/associativemapexample.png)
 
+*To note*:
+
+* Here, we don't give a damn, we just load elements in the order we need them. When the cache is full, we remove the Least Recently Used element (LRU).
+
 #### Set-Associative
 
 ![](./Images/Memory/setassociativemap.png)
+
+*To note*:
+
+* Here, the assumption was made that there were 2 sets in the cache, and that the least significant bit was used to determine which set the block belonged to.
 
 ## Storage Storage Technology
 
