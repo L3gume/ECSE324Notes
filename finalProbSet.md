@@ -118,6 +118,23 @@ Since we have 4 bits for the set field and 7 bits for the word field, that means
 
 *Can't really plot graphs in vim*
 
+*Thing to note:*
+
+* We a CPU has two levels of cache (L1 & L2), can compute average access time with:
+    * t_avg = h1C1 + (1-h1)(h2C2 + (1 - h2)M)
+        * h1C1: hit rate * time on hit
+        * (1-h1)(...): miss rate * time on miss
+        * (h2C2 + (1 - h2)M): time on miss from L1 + same formula (nested for L2)
+    * Where:
+        * h1: hit rate of L1 cache
+        * h2: hit rate of L2 cache
+        * C1: time to access info in L1 cache
+        * C2: miss penalty to transfer info from L2 to L1 cache
+        * M: miss penaltu to transfer info from RAM to L2 cache
+    * The formula is basically:
+        * t_avg = hit_rate * time_on_hit + (1 - hit_rate) * time_on_miss
+        * time_on_miss becomes a nested formula if multiple memory levels
+
 ## Question 3
 
 ### Stuff we know:
@@ -176,3 +193,39 @@ rate = 1E9 / 5.9 = ~169 491 525 instr/sec
 
 * Each step runs in one clock cycle, unless it involves a memory access of instruction fetching
 * To find the average execution time, break down each step of the instruction, determining if it involves memory access or not.
+
+## Question 4
+
+### Stuff we know:
+
+* The instructions that are executed:
+
+```asm
+1000    ADD R3, R2, #20
+1004    SUB R5, R4, #3
+1008    AND R6, R4, #0x3A
+1012    ADD R7, R2, R4
+```
+
+* Initially, [R2] = 2000 & [R4] = 50
+* Executed in computer that has a 5 stage pipeline
+
+### a)
+
+![](./Images/table.png)
+
+### b)
+
+|    |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |
+|----|-----|-----|-----|-----|-----|-----|-----|-----|
+| IR |  -  | ADD | SUB | AND | ADD |  -  |  -  |  -  |
+| PC |1000 | 1004|1008 |1012 | 1016|1018 |1024 |1028 |
+| RA |  -  |  -  |2000 | 50  | 50  |2000 |  -  |  -  |
+| RB |  -  |  -  |  -  |  -  |  -  | 50  |  -  |  -  |
+| RZ |  -  |  -  |  -  |2020 | 47  | 50  |2050 |  -  |
+| RY |  -  |  -  |  -  |  -  | 2020| 47  | 50  | 2050|
+
+*Things to note:*
+
+* The values appear one step later in the registers
+    * For example, we do RZ = 2000 + 20 in step 3, but the result (2020) is in the RZ register at step 4
